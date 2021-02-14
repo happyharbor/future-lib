@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'io.happyharbor'
-version '0.0.1'
+version '0.0.2-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -69,8 +69,8 @@ publishing {
 }
 
 signing {
-    String signingKey = project.property('signing.armored-key')
-    String signingPassword = project.property('signing.password')
+    String signingKey = findProperty("signingKey")
+    String signingPassword = findProperty("signingPassword")
     useInMemoryPgpKeys(signingKey, signingPassword)
     sign publishing.publications.mavenJava
 }

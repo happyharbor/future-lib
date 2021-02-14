@@ -1,0 +1,68 @@
+# Java Gradle CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-java/ for more details
+#
+version: 2.1
+executors:
+  java-executor:
+    docker:
+      - image: cimg/openjdk:13.0
+jobs:
+  build_test:
+    executor:
+      java-executor
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "build.gradle" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run: gradle dependencies
+
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+
+      # run tests!
+      - run: gradle test
+
+      - persist_to_workspace:
+          root: .
+          paths:
+            - build/*
+
+
+  publish:
+    executor:
+      java-executor
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - attach_workspace:
+          at: repo/
+      - run:
+          command: |
+            echo 'export ORG_GRADLE_PROJECT_signingKey=$(echo $ORG_GRADLE_PROJECT_signingKey_encoded | base64 -d)' >> $BASH_ENV
+            source $BASH_ENV
+      - run: gradle publish
+
+
+workflows:
+  test_and_publish:
+    jobs:
+      - build_test
+      - publish:
+          requires:
+            - build_test
+          context:
+            - maven_publish
