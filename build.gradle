@@ -75,9 +75,69 @@ signing {
     sign publishing.publications.mavenJava
 }
 
-
 javadoc {
     if(JavaVersion.current().isJava9Compatible()) {
         options.addBooleanOption('html5', true)
+    }
+}
+
+task newMasterVersion {
+    doLast {
+        String newVersion = version
+        if (newVersion.endsWith('-SNAPSHOT')) {
+            newVersion = newVersion.substring(0, newVersion.length() - 9)
+        }
+        String s = buildFile.getText().replaceFirst("version '$version'", "version '" + newVersion + "'")
+        buildFile.setText(s) //replace the build file's text
+    }
+}
+
+task newDevelopmentVersion {
+    doLast {
+        String newVersion = version
+        if (newVersion.endsWith('-SNAPSHOT')) {
+            newVersion = newVersion.substring(0, newVersion.length() - 9)
+        }
+        String minorStr = newVersion.substring(0, newVersion.lastIndexOf("."))
+        int minor = minorStr.substring(minorStr.lastIndexOf('.') + 1).toInteger() + 1
+        String majorStr = minorStr.substring(0, minorStr.lastIndexOf("."))
+        String s = buildFile.getText().replaceFirst("version '$version'", "version '" + majorStr +  "." + minor + "." + 0 + "-SNAPSHOT'")
+        buildFile.setText(s) //replace the build file's text
+    }
+}
+
+task incrementBuildVersion {
+    doLast {
+        String newVersion = version
+        String suffix = ''
+        if (newVersion.endsWith('-SNAPSHOT')) {
+            newVersion = newVersion.substring(0, newVersion.length() - 9)
+            suffix = '-SNAPSHOT'
+        }
+        String buildStr = newVersion.substring(newVersion.lastIndexOf('.') + 1)
+        int build = buildStr.toInteger() + 1
+        String minorStr = newVersion.substring(0, newVersion.lastIndexOf("."))
+        int minor = minorStr.substring(minorStr.lastIndexOf('.') + 1).toInteger()
+        String majorStr = minorStr.substring(0, minorStr.lastIndexOf("."))
+        String s = buildFile.getText().replaceFirst("version '$version'", "version '" + majorStr +  "." + minor + "." + build + suffix + "'")
+        buildFile.setText(s) //replace the build file's text
+    }
+}
+
+task incrementMinorVersion {
+    doLast {
+        String newVersion = version
+        String suffix = ''
+        if (newVersion.endsWith('-SNAPSHOT')) {
+            newVersion = newVersion.substring(0, newVersion.length() - 9)
+            suffix = '-SNAPSHOT'
+        }
+        String buildStr = newVersion.substring(newVersion.lastIndexOf('.') + 1)
+        int build = buildStr.toInteger()
+        String minorStr = newVersion.substring(0, newVersion.lastIndexOf("."))
+        int minor = minorStr.substring(minorStr.lastIndexOf('.') + 1).toInteger() + 1
+        String majorStr = minorStr.substring(0, minorStr.lastIndexOf("."))
+        String s = buildFile.getText().replaceFirst("version '$version'", "version '" + majorStr +  "." + minor + "." + build + suffix + "'")
+        buildFile.setText(s) //replace the build file's text
     }
 }

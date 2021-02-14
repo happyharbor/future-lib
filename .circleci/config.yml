@@ -39,7 +39,6 @@ jobs:
           paths:
             - build/*
 
-
   publish:
     executor:
       java-executor
@@ -56,6 +55,20 @@ jobs:
             source $BASH_ENV
       - run: gradle publish
 
+      # increase versions
+      - run: git config --global user.email "circlesci@happyharbor.io"
+      - run: git config --global user.name "Circles CI"
+      - run: gradle newMasterVersion
+      - run: git add build.gradle
+      - run: git commit --amend -m "`git show -s --format=%s -1`" -m"[ci skip]"
+      - run: git push --set-upstream origin master --force
+      - run: git checkout develop
+      - run: git rebase origin/master
+      - run: gradle newDevelopmentVersion
+      - run: git add build.gradle
+      - run: git commit -m "Bump version" -m"[ci skip]"
+      - run: git push --set-upstream origin develop
+
 
 workflows:
   test_and_publish:
@@ -64,5 +77,9 @@ workflows:
       - publish:
           requires:
             - build_test
+          filters:
+            branches:
+              only:
+                - master
           context:
             - maven_publish
