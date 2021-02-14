@@ -1,11 +1,14 @@
 package io.happyharbor.genericlib;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Slf4j
 public final class FutureCollectors {
 
     private FutureCollectors() {
@@ -55,6 +58,7 @@ public final class FutureCollectors {
 
             com.forEach(f -> f.whenComplete((t, ex) -> {
                 if (ex != null) {
+                    log.info(ex.getMessage());
                     result.completeExceptionally(ex);
                 }
             }));
