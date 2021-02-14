@@ -58,15 +58,20 @@ jobs:
       # increase versions
       - run: git config --global user.email "circlesci@happyharbor.io"
       - run: git config --global user.name "Circles CI"
-      - run: gradle newMasterVersion
+      - run: ./gradlew -q newMasterVersion
+      - run: echo 'export MASTER_VERSION=$(./gradlew -q getVersion)' >> $BASH_ENV
       - run: git add build.gradle
       - run: git commit --amend -m "`git show -s --format=%s -1`" -m"[ci skip]"
       - run: git push --set-upstream origin master --force
+      - run: git tag -a $MASTER_VERSION -m "New master version $MASTER_VERSION"
+      - run: git push origin $MASTER_VERSION
+
       - run: git checkout develop
       - run: git rebase origin/master
-      - run: gradle newDevelopmentVersion
+      - run: ./gradlew -q newDevelopmentVersion
+      - run: echo 'export DEV_VERSION=$(./gradlew -q getVersion)' >> $BASH_ENV
       - run: git add build.gradle
-      - run: git commit -m "Bump version" -m"[ci skip]"
+      - run: git commit -m "New development version $DEV_VERSION" -m"[ci skip]"
       - run: git push --set-upstream origin develop
 
 
