@@ -15,7 +15,7 @@ public final class FutureCollectors {
     }
 
     /**
-     * Collector that collects Completable Futures of T to aCompletable Futures of List<T>
+     * Collector that collects Completable Futures of T to aCompletable Futures of List of T
      * @param <T> the payload of the Completable Future
      * @return a list of Completable Futures of T
      */
@@ -29,9 +29,9 @@ public final class FutureCollectors {
     }
 
     /**
-     * Collector that collects Completable Futures of T to aCompletable Futures of Stream<T>
+     * Collector that collects Completable Futures of T to aCompletable Futures of Stream of T
      * @param <T> the payload of the Completable Future
-     * @return a Completable Future of Stream<T>
+     * @return a Completable Future of Stream of T
      */
     public static <T> Collector<CompletableFuture<T>, ?, CompletableFuture<Stream<T>>> sequenceStreamCollector() {
         return Collectors.collectingAndThen(Collectors.toList(), com ->
@@ -42,7 +42,7 @@ public final class FutureCollectors {
     }
 
     /**
-     * Collector that collects Completable Futures of T to aCompletable Futures of List<T>.
+     * Collector that collects Completable Futures of T to aCompletable Futures of List of T.
      * The Completable Future will stop on the first error and complete Exceptionally. No new completable Futures will
      * start, but these that have already started will not be cancelled.
      * @param <T> the payload of the Completable Future
