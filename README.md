@@ -1,2 +1,2 @@
-# generic-lib
-Generic one size fit all library for java
+# future-lib
+Completable Future library for java

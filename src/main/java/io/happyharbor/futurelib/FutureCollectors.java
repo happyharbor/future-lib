@@ -1,4 +1,4 @@
-package io.happyharbor.genericlib;
+package io.happyharbor.futurelib;
 
 import lombok.extern.slf4j.Slf4j;
 

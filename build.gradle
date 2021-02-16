@@ -32,7 +32,7 @@ test {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifactId = 'generic-library'
+            artifactId = 'future-library'
             from components.java
             versionMapping {
                 usage('java-api') {
@@ -43,9 +43,9 @@ publishing {
                 }
             }
             pom {
-                name = 'generic-library'
-                description = 'Generic one size fit all Library'
-                url = 'https://github.com/happyharbor/generic-lib'
+                name = 'future-lib'
+                description = 'Future Library'
+                url = 'https://github.com/happyharbor/future-lib'
                 licenses {
                     license {
                         name = 'MIT License'
@@ -60,9 +60,9 @@ publishing {
                     }
                 }
                 scm {
-                    connection = 'scm:git:git://github.com/happyharbor/generic-lib.git'
-                    developerConnection = 'scm:git:git://github.com/happyharbor/generic-lib.git'
-                    url = 'https://github.com/happyharbor/generic-lib'
+                    connection = 'scm:git:git://github.com/happyharbor/future-lib.git'
+                    developerConnection = 'scm:git:git://github.com/happyharbor/future-lib.git'
+                    url = 'https://github.com/happyharbor/future-lib'
                 }
             }
         }
@@ -70,9 +70,15 @@ publishing {
     repositories {
         maven {
             // change URLs to point to your repos, e.g. http://my.org/repo
-            def releasesRepoUrl = "$buildDir/repos/releases"
-            def snapshotsRepoUrl = "$buildDir/repos/snapshots"
+            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+            String sonatypeUsername = findProperty('sonatypeUsername')
+            String sonatypePassword = findProperty('sonatypePassword')
             url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username sonatypeUsername
+                password sonatypePassword
+            }
         }
     }
 }
