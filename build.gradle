@@ -8,7 +8,7 @@ plugins {
 }
 
 group 'io.happyharbor'
-version '0.5.0'
+version '0.5.1-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -117,7 +117,7 @@ jacocoTestReport {
 }
 
 coveralls {
-    jacocoReportPath 'build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml'
+    jacocoReportPath 'build/reports/jacoco/test/jacocoTestReport.xml'
 }
 
 task newMasterVersion {
