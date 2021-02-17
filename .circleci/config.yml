@@ -43,7 +43,8 @@ jobs:
           paths:
             - build/*
 
-  publish:
+
+  publish_snapshot:
     executor:
       java-executor
 
@@ -58,16 +59,32 @@ jobs:
             echo 'export ORG_GRADLE_PROJECT_signingKey=$(echo $ORG_GRADLE_PROJECT_signingKey_encoded | base64 -d)' >> $BASH_ENV
             source $BASH_ENV
       - run: gradle publish
+
+
+  publish_release:
+    executor:
+      java-executor
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - attach_workspace:
+          at: repo/
+      - run:
+          command: |
+            echo 'export ORG_GRADLE_PROJECT_signingKey=$(echo $ORG_GRADLE_PROJECT_signingKey_encoded | base64 -d)' >> $BASH_ENV
+            source $BASH_ENV
+      - run: ./gradlew -q newMasterVersion
+      - run: gradle publish
       - run: gradle closeAndReleaseRepository
 
-      # increase versions
       - run: git config --global user.email "circlesci@happyharbor.io"
       - run: git config --global user.name "Circles CI"
-      - run: ./gradlew -q newMasterVersion
-      - run: echo 'export MASTER_VERSION=$(./gradlew -q getVersion)' >> $BASH_ENV
       - run: git add build.gradle
       - run: git commit --amend -m "`git show -s --format=%s -1`" -m"[ci skip]"
       - run: git push --set-upstream origin master --force
+      - run: echo 'export MASTER_VERSION=$(./gradlew -q getVersion)' >> $BASH_ENV
       - run: git tag -a $MASTER_VERSION -m "New master version $MASTER_VERSION"
       - run: git push origin $MASTER_VERSION
 
@@ -84,7 +101,16 @@ workflows:
   test_and_publish:
     jobs:
       - build_test
-      - publish:
+      - publish_snapshot:
+          requires:
+            - build_test
+          filters:
+            branches:
+              ignore:
+                - master
+          context:
+            - maven_publish
+      - publish_release:
           requires:
             - build_test
           filters:
