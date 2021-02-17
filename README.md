@@ -1,8 +1,11 @@
 # Future Library
-[![CircleCI](https://circleci.com/gh/happyharbor/future-lib.svg?style=svg)](https://circleci.com/gh/circleci/circleci-docs)
+[![CircleCI](https://circleci.com/gh/happyharbor/future-lib.svg?style=shield)](https://circleci.com/gh/circleci/circleci-docs)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.happyharbor/future-library/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.happyharbor/future-lib)
-[![GitHub license](https://img.shields.io/github/license/happyharbor/future-lib)](https://github.com/happyharbor/future-lib/blob/master/LICENCE)
 [![Coverage Status](https://coveralls.io/repos/github/happyharbor/future-lib/badge.svg)](https://coveralls.io/github/happyharbor/future-lib)
+[![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=happyharbor_future-lib&metric=alert_status)](https://sonarcloud.io/dashboard?id=happyharbor_future-lib)
+[![SonarCloud Bugs](https://sonarcloud.io/api/project_badges/measure?project=happyharbor_future-lib&metric=bugs)](https://sonarcloud.io/component_measures/metric/reliability_rating/list?id=happyharbor_future-lib)
+[![SonarCloud Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=happyharbor_future-lib&metric=vulnerabilities)](https://sonarcloud.io/component_measures/metric/security_rating/list?id=happyharbor_future-lib)
+[![GitHub license](https://img.shields.io/github/license/happyharbor/future-lib)](https://github.com/happyharbor/future-lib/blob/master/LICENCE)
 
 A Completable Future library for java that help you make tedious transformations and error handling easier
 

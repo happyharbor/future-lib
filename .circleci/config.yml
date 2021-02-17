@@ -36,6 +36,8 @@ jobs:
 
       - run: ./gradlew jacocoTestReport coveralls
 
+      - run: ./gradlew sonarqube
+
       - persist_to_workspace:
           root: .
           paths:
@@ -98,7 +100,9 @@ jobs:
 workflows:
   test_and_publish:
     jobs:
-      - build_test
+      - build_test:
+          context:
+            - SonarCloud
       - publish_snapshot:
           requires:
             - build_test
