@@ -3,10 +3,12 @@
 # Check https://circleci.com/docs/2.0/language-java/ for more details
 #
 version: 2.1
+orbs:
+  coveralls: coveralls/coveralls@1.0.6
 executors:
   java-executor:
     docker:
-      - image: cimg/openjdk:13.0
+      - image: cimg/openjdk:13.0-node
 jobs:
   build_test:
     executor:
@@ -34,6 +36,8 @@ jobs:
       # run tests!
       - run: gradle test
 
+      - run: gradle coveralls
+
       - persist_to_workspace:
           root: .
           paths:
@@ -53,8 +57,8 @@ jobs:
           command: |
             echo 'export ORG_GRADLE_PROJECT_signingKey=$(echo $ORG_GRADLE_PROJECT_signingKey_encoded | base64 -d)' >> $BASH_ENV
             source $BASH_ENV
-      - run: ./gradlew publish
-      - run: ./gradlew closeAndReleaseRepository
+      - run: gradle publish
+      - run: gradle closeAndReleaseRepository
 
       # increase versions
       - run: git config --global user.email "circlesci@happyharbor.io"

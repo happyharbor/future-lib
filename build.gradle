@@ -3,6 +3,8 @@ plugins {
     id 'maven-publish'
     id 'signing'
     id 'io.codearte.nexus-staging' version '0.22.0'
+    id 'jacoco'
+    id 'com.github.kt3k.coveralls' version '2.8.4'
 }
 
 group 'io.happyharbor'
@@ -105,6 +107,17 @@ javadoc {
 nexusStaging {
     username = findProperty('sonatypeUsername')
     password = findProperty('sonatypePassword')
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true // coveralls plugin depends on xml format report
+        html.enabled = true
+    }
+}
+
+coveralls {
+    jacocoReportPath 'build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml'
 }
 
 task newMasterVersion {
