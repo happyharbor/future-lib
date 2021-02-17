@@ -53,7 +53,8 @@ jobs:
           command: |
             echo 'export ORG_GRADLE_PROJECT_signingKey=$(echo $ORG_GRADLE_PROJECT_signingKey_encoded | base64 -d)' >> $BASH_ENV
             source $BASH_ENV
-      - run: gradle publish
+      - run: ./gradlew publish
+      - run: ./gradlew closeAndReleaseRepository
 
       # increase versions
       - run: git config --global user.email "circlesci@happyharbor.io"
