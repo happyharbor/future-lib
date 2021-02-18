@@ -34,6 +34,8 @@ jobs:
       # run tests!
       - run: ./gradlew test
 
+      - run: ./gradlew jacocoTestReport coveralls
+
       - run: ./gradlew sonarqube
 
       - persist_to_workspace:
@@ -88,7 +90,7 @@ jobs:
 
       - run: git checkout develop
       - run: git rebase origin/master
-      - run: ./gradlew -q newDevelopmentVersion
+      - run: ./gradlew -q newMinorVersion
       - run: echo 'export DEV_VERSION=$(./gradlew -q getVersion)' >> $BASH_ENV
       - run: git add build.gradle
       - run: git commit -m "New development version $DEV_VERSION" -m"[ci skip]"
