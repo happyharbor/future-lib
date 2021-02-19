@@ -94,6 +94,14 @@ jobs:
       - run: git commit -m "New development version $DEV_VERSION" -m"[ci skip]"
       - run: git push --set-upstream origin develop
 
+      - run:
+          name: Revert commit when build fails
+          command: |
+            git reset --hard HEAD^
+            git push -f
+            git push --delete origin $MASTER_VERSION || true
+          when: on_fail
+
 
 workflows:
   test_and_publish:
