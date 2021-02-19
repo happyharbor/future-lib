@@ -8,7 +8,7 @@ plugins {
 }
 
 group 'io.happyharbor'
-version '0.5.4-SNAPSHOT'
+version '0.5.5-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -122,6 +122,7 @@ sonarqube {
         property "sonar.organization", "happyharbor"
         property "sonar.host.url", "https://sonarcloud.io"
         property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
+        property "sonar.junit.reportPaths", "build/reports/tests/test/index.xml"
     }
 }
 
