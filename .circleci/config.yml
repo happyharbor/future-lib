@@ -91,8 +91,17 @@ jobs:
       - run: ./gradlew -q newMinorVersion
       - run: echo 'export DEV_VERSION=$(./gradlew -q getVersion)' >> $BASH_ENV
       - run: git add build.gradle
-      - run: git commit -m "New development version $DEV_VERSION" -m"[ci skip]"
+      - run: git commit -m"New development version $DEV_VERSION" -m"[ci skip]"
       - run: git push --set-upstream origin develop
+
+      - run:
+          name: Revert commit when build fails
+          command: |
+            git reset --hard HEAD^
+            git commit --amend -m "`git show -s --format=%s -1`" -m"[ci skip]"
+            git push -f
+            git push --delete origin $MASTER_VERSION || true
+          when: on_fail
 
 
 workflows:
