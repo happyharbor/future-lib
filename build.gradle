@@ -8,7 +8,7 @@ plugins {
 }
 
 group 'io.happyharbor'
-version '0.5.4-SNAPSHOT'
+version '0.5.5'
 
 repositories {
     mavenCentral()

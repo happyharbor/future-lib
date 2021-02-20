@@ -69,6 +69,10 @@ jobs:
       - checkout
       - attach_workspace:
           at: repo/
+
+      - run: git config --global user.email "circlesci@happyharbor.io"
+      - run: git config --global user.name "Circles CI"
+
       - run:
           command: |
             echo 'export ORG_GRADLE_PROJECT_signingKey=$(echo $ORG_GRADLE_PROJECT_signingKey_encoded | base64 -d)' >> $BASH_ENV
@@ -77,8 +81,6 @@ jobs:
       - run: ./gradlew publish
       - run: ./gradlew closeAndReleaseRepository
 
-      - run: git config --global user.email "circlesci@happyharbor.io"
-      - run: git config --global user.name "Circles CI"
       - run: git add build.gradle
       - run: git commit --amend -m "`git show -s --format=%s -1`" -m"[ci skip]"
       - run: git push --set-upstream origin master --force
