@@ -12,7 +12,7 @@ A Completable Future library for java that help you make tedious transformations
 ## Future Collectors
 A collection of collectors that help write functional code.
 
-### List<CompletableFuture<T> to CompletableFuture<List<T>>
+### List<CompletableFuture\<T> to CompletableFuture<List\<T>>
 When dealing with Completable Futures there are many times that you will arrive at a point that you have a list of 
 completable futures, and you would like to continue creating executions paths with the help of thenApply etc. 
 

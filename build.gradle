@@ -4,10 +4,11 @@ plugins {
     id 'signing'
     id 'io.codearte.nexus-staging' version '0.22.0'
     id "org.sonarqube" version '3.1.1'
+    id 'jacoco'
 }
 
 group 'io.happyharbor'
-version '0.5.3'
+version '0.5.4-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -108,11 +109,20 @@ nexusStaging {
     password = findProperty('sonatypePassword')
 }
 
+jacocoTestReport {
+    reports {
+        xml.enabled = true // coveralls plugin depends on xml format report
+        html.enabled = true
+    }
+}
+
 sonarqube {
     properties {
         property "sonar.projectKey", "happyharbor_future-lib"
         property "sonar.organization", "happyharbor"
         property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
+        property "sonar.junit.reportPaths", "build/reports/tests/test/index.xml"
     }
 }
 
@@ -128,7 +138,7 @@ task newMasterVersion {
     }
 }
 
-task newDevelopmentVersion {
+task newMajorVersion {
     doLast {
         String newVersion = version
         if (newVersion.endsWith('-SNAPSHOT')) {
@@ -138,6 +148,21 @@ task newDevelopmentVersion {
         int minor = minorStr.substring(minorStr.lastIndexOf('.') + 1).toInteger() + 1
         String majorStr = minorStr.substring(0, minorStr.lastIndexOf("."))
         String finalVersion = majorStr +  "." + minor + "." + 0 + "-SNAPSHOT"
+        String s = buildFile.getText().replaceFirst("version '$version'", "version '" + finalVersion + "'")
+        buildFile.setText(s) //replace the build file's text
+        println(finalVersion)
+    }
+}
+
+task newMinorVersion {
+    doLast {
+        String newVersion = version
+        if (newVersion.endsWith('-SNAPSHOT')) {
+            newVersion = newVersion.substring(0, newVersion.length() - 9)
+        }
+        String newMinor = newVersion.substring(newVersion.lastIndexOf(".") + 1).toInteger() + 1
+        String majorPart = newVersion.substring(0, newVersion.lastIndexOf("."))
+        String finalVersion = majorPart +  "." + newMinor + "-SNAPSHOT"
         String s = buildFile.getText().replaceFirst("version '$version'", "version '" + finalVersion + "'")
         buildFile.setText(s) //replace the build file's text
         println(finalVersion)
