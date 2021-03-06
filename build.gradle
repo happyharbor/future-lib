@@ -7,8 +7,10 @@ plugins {
     id 'jacoco'
 }
 
+sourceCompatibility = '8'
+
 group 'io.happyharbor'
-version '0.5.7'
+version '0.5.8'
 
 repositories {
     mavenCentral()
