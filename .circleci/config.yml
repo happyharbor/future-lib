@@ -83,7 +83,7 @@ jobs:
       - run: git push --set-upstream origin develop
 
       - run:
-          name: Revert commit when build fails
+          name: Revert commit when build failss
           command: |
             git reset --hard HEAD^
             git commit --amend -m "`git show -s --format=%s -1`" -m"[ci skip]"
