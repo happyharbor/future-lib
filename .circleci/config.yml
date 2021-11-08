@@ -27,6 +27,4 @@ jobs:
 workflows:
   test_and_publish:
     jobs:
-      - build_test:
-          context:
-            - SonarCloud
+      - build_test
