@@ -112,15 +112,6 @@ workflows:
       - build_test:
           context:
             - SonarCloud
-      - publish_snapshot:
-          requires:
-            - build_test
-          filters:
-            branches:
-              ignore:
-                - master
-          context:
-            - maven_publish
       - publish_release:
           requires:
             - build_test
