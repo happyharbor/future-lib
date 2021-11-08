@@ -1,0 +1,6 @@
+# intellij specific
+.idea/
+
+# gradle
+.gradle/
+build/
