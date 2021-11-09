@@ -1,13 +1,13 @@
 plugins {
     id 'java-library'
-    id 'maven-publish'
-    id 'signing'
-    id 'io.codearte.nexus-staging' version '0.22.0'
-    id "org.sonarqube" version '3.1.1'
+    id "org.sonarqube" version '3.3'
+    id 'jacoco'
 }
 
+sourceCompatibility = '11'
+
 group 'io.happyharbor'
-version '0.5.3'
+version '0.5.9-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -23,89 +23,18 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.16'
     annotationProcessor 'org.projectlombok:lombok:1.18.16'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 }
 
 test {
     useJUnitPlatform()
 }
 
-java {
-    withJavadocJar()
-    withSourcesJar()
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifactId = 'future-library'
-            from components.java
-            versionMapping {
-                usage('java-api') {
-                    fromResolutionOf('runtimeClasspath')
-                }
-                usage('java-runtime') {
-                    fromResolutionResult()
-                }
-            }
-            pom {
-                name = 'future-lib'
-                description = 'Future Library'
-                url = 'https://github.com/happyharbor/future-lib'
-                licenses {
-                    license {
-                        name = 'MIT License'
-                        url = 'http://www.opensource.org/licenses/mit-license.php'
-                    }
-                }
-                developers {
-                    developer {
-                        id = 'trixobird'
-                        name = 'Giorgos Trichopoulos'
-                        email = 'george.trichopoulos@gmail.com'
-                    }
-                }
-                scm {
-                    connection = 'scm:git:git://github.com/happyharbor/future-lib.git'
-                    developerConnection = 'scm:git:git://github.com/happyharbor/future-lib.git'
-                    url = 'https://github.com/happyharbor/future-lib'
-                }
-            }
-        }
+jacocoTestReport {
+    reports {
+        xml.getRequired().set(true)
     }
-    repositories {
-        maven {
-            // change URLs to point to your repos, e.g. http://my.org/repo
-            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
-            String sonatypeUsername = findProperty('sonatypeUsername')
-            String sonatypePassword = findProperty('sonatypePassword')
-            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
-            credentials {
-                username sonatypeUsername
-                password sonatypePassword
-            }
-        }
-    }
-}
-
-signing {
-    String signingKey = findProperty("signingKey")
-    String signingPassword = findProperty("signingPassword")
-    useInMemoryPgpKeys(signingKey, signingPassword)
-    sign publishing.publications.mavenJava
-}
-
-javadoc {
-    if(JavaVersion.current().isJava9Compatible()) {
-        options.addBooleanOption('html5', true)
-    }
-}
-
-nexusStaging {
-    username = findProperty('sonatypeUsername')
-    password = findProperty('sonatypePassword')
 }
 
 sonarqube {
@@ -113,39 +42,6 @@ sonarqube {
         property "sonar.projectKey", "happyharbor_future-lib"
         property "sonar.organization", "happyharbor"
         property "sonar.host.url", "https://sonarcloud.io"
-    }
-}
-
-task newMasterVersion {
-    doLast {
-        String newVersion = version
-        if (newVersion.endsWith('-SNAPSHOT')) {
-            newVersion = newVersion.substring(0, newVersion.length() - 9)
-        }
-        String s = buildFile.getText().replaceFirst("version '$version'", "version '" + newVersion + "'")
-        buildFile.setText(s) //replace the build file's text
-        println(newVersion)
-    }
-}
-
-task newDevelopmentVersion {
-    doLast {
-        String newVersion = version
-        if (newVersion.endsWith('-SNAPSHOT')) {
-            newVersion = newVersion.substring(0, newVersion.length() - 9)
-        }
-        String minorStr = newVersion.substring(0, newVersion.lastIndexOf("."))
-        int minor = minorStr.substring(minorStr.lastIndexOf('.') + 1).toInteger() + 1
-        String majorStr = minorStr.substring(0, minorStr.lastIndexOf("."))
-        String finalVersion = majorStr +  "." + minor + "." + 0 + "-SNAPSHOT"
-        String s = buildFile.getText().replaceFirst("version '$version'", "version '" + finalVersion + "'")
-        buildFile.setText(s) //replace the build file's text
-        println(finalVersion)
-    }
-}
-
-task getVersion {
-    doLast {
-        println(version)
+        property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
     }
 }
