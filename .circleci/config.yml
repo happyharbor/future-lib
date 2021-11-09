@@ -13,7 +13,7 @@ jobs:
     steps:
       - checkout
 
-      # run tests!!
+      # run tests!
       - run: ./gradlew test jacocoTestReport
 
       - run: ./gradlew sonarqube
